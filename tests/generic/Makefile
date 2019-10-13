@@ -10,6 +10,15 @@ $(TARGETS): $(SOURCES)
 
 clean:
 	@rm -f *.cmo *.cmi
+
+flash: test.hex
+	$(BIN)/omicrob -device arduino-uno -flash -sudo $<
+
+simul: test.elf
+	./$< '../../bin/omicrob_pin_simulator' '../../bin/omicrob_circuit_simulator circuit.txt'
+
+clean:
+	@rm -f *.cmo *.cmi
 	@rm -f $(TARGETS)
 
 .PHONY: all flash clean
