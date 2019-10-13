@@ -86,6 +86,7 @@ XC32_GXX="$(which xc32-g++)"
 XC32_BIN2HEX="$(which xc32-bin2hex)"
 PIC32PROG="$(which pic32prog)"
 ARM_GXX="$(which arm-none-eabi-g++ 2> /dev/null)"
+ARM_OBJCOPY="$(which arm-none-eabi-objcopy 2> /dev/null)"
 OCAML="$(which ocaml.opt 2> /dev/null || which ocaml)"
 OCAMLOPT="$(which ocamlopt.opt 2> /dev/null || which ocamlopt)"
 OCAMLC="$(which ocamlc.opt 2> /dev/null || which ocamlc)"
@@ -157,6 +158,8 @@ AVRDUDE     := $AVRDUDE
 XC32_GXX    := $XC32_GXX
 XC32_BIN2HEX:= $XC32_BIN2HEX
 PIC32PROG   := $PIC32PROG
+ARM_GXX     := $ARM_GXX
+ARM_OBJCOPY := $ARM_OBJCOPY
 OCAMLC      := $OCAMLC -w A-58-e -warn-error A -safe-string -strict-formats -strict-sequence
 OCAMLOPT    := $OCAMLOPT -w A-58-e -warn-error A -safe-string -strict-formats -strict-sequence
 OCAMLDOC    := $OCAMLDOC
@@ -197,6 +200,7 @@ let xc32_cxx    = \"$XC32_GXX\"
 let xc32_bin2hex= \"$XC32_BIN2HEX\"
 let pic32prog   = \"$PIC32PROG\"
 let arm_cxx     = \"$ARM_GXX\"
+let arm_objcopy = \"$ARM_OBJCOPY\"
 let version     = \"$VERSION\"
 " > etc/config.ml
 

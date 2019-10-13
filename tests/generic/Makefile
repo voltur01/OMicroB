@@ -1,7 +1,7 @@
 include ../../etc/Makefile.conf
 
 SOURCES := test.ml
-TARGETS := test.byte test.c test.elf
+TARGETS := test.byte test.c test.elf test.hex
 
 all: $(TARGETS)
 
