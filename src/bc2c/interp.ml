@@ -523,7 +523,7 @@ let ccall arch ooid prim args =
       | "caml_set_bit" | "caml_clear_bit" | "caml_read_bit" | "caml_delay"
       | "caml_write_register" | "caml_read_register"
       | "caml_debug_trace" | "caml_debug_tracei"
-      | "caml_random_init" | "caml_random_bits" | "caml_random_bool" -> ()
+      | "caml_random_init" | "caml_random_bits" | "caml_random_bool"
       | "caml_avr_serial_init" | "caml_avr_serial_write" | "caml_avr_serial_read"
       | "caml_microbit_print_string" | "caml_microbit_print_int"
       | "caml_microbit_write_pixel" | "caml_microbit_print_image" | "caml_microbit_clear_screen"
