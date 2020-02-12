@@ -104,7 +104,6 @@ LIBDIR=/usr/local/lib/omicrob
 LIBEXECDIR=/usr/local/libexec/omicrob
 INCLUDEDIR=/usr/local/include/omicrob
 MANDIR=/usr/local/man
-TARGET=""
 
 while [ $# -ne 0 ]; do
     case "$1" in
@@ -131,8 +130,6 @@ while [ $# -ne 0 ]; do
             LIBEXECDIR="$PREFIX/libexec/omicrob"
             INCLUDEDIR="$PREFIX/include/omicrob"
             MANDIR="$PREFIX/man" ;;
-        -target)
-            TARGET="$2";;
         *)
         usage "Don't know what to do with \"$1\""
     esac
@@ -178,7 +175,7 @@ define clean
         @\$(MAKE) --no-print-directory -C \$1 clean > /dev/null
 endef
 
-TARGETS      := \\
+ARCHS := \\
 " > etc/Makefile.conf
 
 ################################################################################
@@ -209,11 +206,12 @@ let version     = \"$VERSION\"
 # Refresh targets files
 function reset_targets() {
     cp "targets/device_config.ml" "src/omicrob/device_config.ml"
-    rm -f "src/byterun/prims/prims.h"
+
     cat "src/byterun/prims/indep-prims.h" > "src/byterun/prims/prims.h"
     cat "src/byterun/prims/indep-bindings.c" > "src/byterun/prims/bindings.c"
     cat "src/byterun/simul/indep-sf-regs.h" > "src/byterun/simul/sf-regs.h"
     cat "src/byterun/simul/indep-sf-regs.c" > "src/byterun/simul/sf-regs.c"
+
     rm -rf "src/byterun/avr/"
     rm -rf "src/byterun/pic32"
     rm -rf "src/byterun/microbit"
@@ -277,6 +275,11 @@ function target_microbit () {
     check_command "arm-none-eabi-g++"
 
     cat "targets/microbit/device_config.ml" >> "src/omicrob/device_config.ml"
+
+    cat "targets/microbit/byterun/prims/prims.h" >> "src/byterun/prims/prims.h"
+    cat "targets/microbit/byterun/prims/bindings.c" >> "src/byterun/prims/bindings.c"
+    cat "targets/microbit/byterun/prims/prims.h" >> "src/byterun/simul/sf-regs.h"
+    cat "targets/microbit/byterun/simul/sf-regs.c" >> "src/byterun/simul/sf-regs.c"
 
     cp -rf "targets/microbit/byterun" "src/byterun/microbit"
 

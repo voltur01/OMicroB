@@ -1,6 +1,6 @@
 include etc/Makefile.conf
 
-all: internals $(TARGETS)
+all: internals $(ARCHS)
 
 internals: config
 	$(call compile, lib/extra)

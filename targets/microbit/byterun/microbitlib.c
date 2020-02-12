@@ -131,7 +131,7 @@ void microbit_print_string(char *str) {
   for(; *str != '\0'; str++) {
     int start = (*str-32)*5;
     for(int i = start; i < start+5; i++) {
-      unsigned char c = pendolino3[i]; int j;
+      unsigned char c = pendolino3[i];
       microbit_write_pixel(0, i-start, (c&0x10)*255);
       microbit_write_pixel(1, i-start, (c&0x08)*255);
       microbit_write_pixel(2, i-start, (c&0x04)*255);

@@ -1,6 +1,10 @@
-include ../../../etc/Makefile.conf
+include ../../../../etc/Makefile.conf
 
-mbserial.hex: mbserial.ml
+TARGETS := mbbasic.elf mbbasic.hex
+
+all: $(TARGETS)
+
+$(TARGETS): mbbasic.ml
 	$(BIN)/omicrob -v -device=microbit $^ -o $@
 
 clean:
