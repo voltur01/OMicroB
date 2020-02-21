@@ -5,6 +5,7 @@
 
 #define SET_BIT(reg, n) reg |= BIT(n)
 #define CLR_BIT(reg, n) reg &= ~BIT(n)
+#define READ_BIT(reg, n) reg & BIT(n)
 
 #define SET_FIELD(reg, field, val) \
      reg = (reg & ~field##_Msk) | ((val) << field##_Pos)

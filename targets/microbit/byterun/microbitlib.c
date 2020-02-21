@@ -1,3 +1,5 @@
+#include <stdint.h>
+#include <stdbool.h>
 #include "hardware.h"
 #include "microbitlib.h"
 
@@ -46,8 +48,37 @@ void microbit_init() {
   serial_init();
 }
 
+/******************************************************************************/
+
+volatile uint8_t *get_reg_addr(uint8_t reg) {
+  // TODO
+  return 0;
+}
+
+void set_bit(uint8_t reg, uint8_t bit) {
+  SET_BIT(*(get_reg_addr(reg)), bit);
+}
+
+void clear_bit(uint8_t reg, uint8_t bit) {
+  CLR_BIT(*(get_reg_addr(reg)), bit);
+}
+
+bool read_bit(uint8_t reg, uint8_t bit) {
+  return READ_BIT(*(get_reg_addr(reg)), bit);
+}
+
+void write_register(uint8_t reg, uint8_t val) {
+  *(get_reg_addr(reg)) = val;
+}
+
+uint8_t read_register(uint8_t reg) {
+  return *(get_reg_addr(reg));
+}
+
+/******************************************************************************/
+
 /* delay -- pause for n milliseconds */
-void microbit_delay(int ms) {
+void delay(int ms) {
   unsigned t = (ms * 1000) << 1;
   while (t > 0) {
     // 500nsec per iteration at 16MHz
@@ -56,11 +87,13 @@ void microbit_delay(int ms) {
   }
 }
 
-static long millis = 0;
+static long mils = 0;
 
-int microbit_millis() {
-  return millis;
+int millis() {
+  return mils;
 }
+
+/******************************************************************************/
 
 // Current content of the screen
 unsigned screenContent[] = { (1<<13)+(1<<13)-1, (1<<14)+(1<<13)-1, (1<<15)+(1<<13)-1 };
@@ -79,7 +112,7 @@ void advance_display() {
 void timer1_handler(void) {
   if (TIMER1_COMPARE[0]) {
     advance_display();
-    millis += TICK;
+    mils += TICK;
     TIMER1_COMPARE[0] = 0;
   }
 }
@@ -138,7 +171,7 @@ void microbit_print_string(char *str) {
       microbit_write_pixel(3, i-start, (c&0x02)*255);
       microbit_write_pixel(4, i-start, (c&0x01)*255);
     }
-    microbit_delay(300);
+    delay(300);
   }
   microbit_clear_screen();
 }
@@ -147,6 +180,8 @@ int microbit_button_is_pressed(int b) {
   if(b == 0) return (GPIO_IN & BIT(BUTTON_A)) > 127 ? 0 : 1;
   return (GPIO_IN & BIT(BUTTON_B)) > 127 ? 0 : 1;
 }
+
+/******************************************************************************/
 
 void microbit_pin_mode(int p, int m) {
   GPIO_PINCNF[pins[p]] = m;
@@ -158,7 +193,7 @@ void microbit_digital_write(int p, int l) {
 }
 
 int microbit_digital_read(int p) {
-  return GPIO_IN & BIT(pins[p]);
+  return READ_BIT(GPIO_IN, BIT(pins[p]));
 }
 
 void microbit_analog_write(int p, int l) {

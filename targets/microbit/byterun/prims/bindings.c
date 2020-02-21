@@ -69,15 +69,6 @@ value caml_microbit_analog_read(value p) {
   return Val_int(microbit_analog_read(Int_val(p)));
 }
 
-value caml_microbit_delay(value ms) {
-  microbit_delay(Int_val(ms));
-  return Val_unit;
-}
-
-value caml_microbit_millis() {
-  return Val_int(microbit_millis());
-}
-
 /******************************************************************************/
 
 value caml_microbit_serial_write_char(value c) {

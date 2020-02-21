@@ -520,7 +520,8 @@ let ccall arch ooid prim args =
   | _ ->
     begin
       match prim with
-      | "caml_set_bit" | "caml_clear_bit" | "caml_read_bit" | "caml_delay"
+      | "caml_set_bit" | "caml_clear_bit" | "caml_read_bit"
+      | "caml_delay" | "caml_millis"
       | "caml_write_register" | "caml_read_register"
       | "caml_debug_trace" | "caml_debug_tracei"
       | "caml_random_init" | "caml_random_bits" | "caml_random_bool"
@@ -533,7 +534,6 @@ let ccall arch ooid prim args =
       | "caml_microbit_analog_write" | "caml_microbit_analog_read"
       | "caml_microbit_serial_send_char" | "caml_microbit_serial_read_char"
       | "caml_microbit_spi_init_master" | "caml_microbit_spi_transmit"
-      | "caml_microbit_delay" | "caml_microbit_millis"
       | "caml_microbit_accelerometer_x" | "caml_microbit_accelerometer_y" | "caml_microbit_accelerometer_z"
       | "caml_microbit_accelerometer_pitch" | "caml_microbit_accelerometer_roll"
       | "caml_microbit_compass_calibrate" | "caml_microbit_compass_heading"

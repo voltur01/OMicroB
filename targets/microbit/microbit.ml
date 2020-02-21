@@ -54,9 +54,9 @@ let analog_read p =
   then invalid_arg "analog_write: only pins 0, 1, 2, 3, 4 and 10 are supported";
   unsafe_analog_read p
 
-external delay: int -> unit = "caml_microbit_delay" [@@noalloc]
+external delay: int -> unit = "caml_delay" [@@noalloc]
 
-external millis : unit -> int = "caml_microbit_millis" [@@noalloc]
+external millis : unit -> int = "caml_millis" [@@noalloc]
 
 module Screen = struct
   let init () = ()

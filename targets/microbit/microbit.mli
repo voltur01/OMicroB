@@ -18,7 +18,7 @@ module ButtonB: Circuits.Button
 
 val pin_mode: pin -> mode -> unit
 
-external digital_write: pin -> level -> unit = "caml_microbit_digital_write" [@@noalloc]
+val digital_write: pin -> level -> unit
 
 val digital_read: pin -> level
 
@@ -26,9 +26,9 @@ val analog_write: pin -> int -> unit
 
 val analog_read: pin -> int
 
-external delay: int -> unit = "caml_microbit_delay" [@@noalloc]
+val delay: int -> unit
 
-external millis: unit -> int = "caml_microbit_millis" [@@noalloc]
+val millis: unit -> int
 
 module Screen: Circuits.Display
 

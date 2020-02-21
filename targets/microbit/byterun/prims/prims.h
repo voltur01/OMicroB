@@ -20,11 +20,6 @@ int microbit_analog_read(int p);
 
 /******************************************************************************/
 
-void microbit_delay(int ms);
-int microbit_millis();
-
-/******************************************************************************/
-
 void microbit_write_pixel(int x, int y, int l);
 void microbit_print_string(char *str);
 void microbit_print_image(char *str);

@@ -10,7 +10,7 @@ void device_init(const char **argv) {
 }
 
 void device_finish() {
-  microbit_delay(10);
+  delay(10);
 }
 
 /******************************************************************************/
@@ -21,7 +21,7 @@ void debug_blink_error(void) {
   while(1) {
     char s[] = "E";
     microbit_print_string(s);
-    microbit_delay(300);
+    delay(300);
   }
 }
 
@@ -29,7 +29,7 @@ void debug_blink_uncatched_exception(void) {
   while(1) {
     char s[] = "U";
     microbit_print_string(s);
-    microbit_delay(300);
+    delay(300);
   }
 }
 
@@ -42,7 +42,7 @@ void debug_blink_message(int n) {
 void debug_blink_pause(void) {
   char s[] = "P";
   microbit_print_string(s);
-  microbit_delay(1000);
+  delay(1000);
 }
 
 #if DEBUG > 0
