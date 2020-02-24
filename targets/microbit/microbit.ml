@@ -83,10 +83,10 @@ end
 
 module Serial = struct
   let init () = ()
-  external write_char: char -> unit = "caml_microbit_serial_write_char" [@@noalloc]
+  external write_char: char -> unit = "caml_microbit_serial_write" [@@noalloc]
   let write s = String.iter write_char s
 
-  external read_char: unit -> char = "caml_microbit_serial_read_char" [@@noalloc]
+  external read_char: unit -> char = "caml_microbit_serial_read" [@@noalloc]
   let read () =
     let s = ref ""
     and c = ref (read_char ()) in

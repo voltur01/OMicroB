@@ -30,7 +30,10 @@ val delay: int -> unit
 
 val millis: unit -> int
 
-module Screen: Circuits.Display
+module Screen: sig
+  include Circuits.Display
+  val set_pixel : int -> int -> bool -> unit
+end
 
 module Serial: sig
   val init: unit -> unit

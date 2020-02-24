@@ -209,7 +209,7 @@ int microbit_analog_read(int p) {
 
 /******************************************************************************/
 
-void microbit_serial_write_char(char ch) {
+void microbit_serial_write(char ch) {
   if (! txinit) {
     while (! UART_TXDRDY) { }
   }
@@ -218,7 +218,7 @@ void microbit_serial_write_char(char ch) {
   UART_TXD = ch;
 }
 
-char microbit_serial_read_char() {
+char microbit_serial_read() {
   while (! UART_RXDRDY) { }
   char ch = UART_RXD;
   UART_RXDRDY = 0;

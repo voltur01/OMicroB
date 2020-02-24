@@ -62,11 +62,11 @@ int microbit_millis() {
 
 /******************************************************************************/
 
-void microbit_serial_write_char(char c) {
+void microbit_serial_write(char c) {
   printf("%c", c);
 }
 
-char microbit_serial_read_char() {
+char microbit_serial_read() {
   return 0;
 }
 

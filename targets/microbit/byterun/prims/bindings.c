@@ -71,13 +71,13 @@ value caml_microbit_analog_read(value p) {
 
 /******************************************************************************/
 
-value caml_microbit_serial_write_char(value c) {
-  microbit_serial_write_char((char) Int_val(c));
+value caml_microbit_serial_write(value c) {
+  microbit_serial_write((char) Int_val(c));
   return Val_unit;
 }
 
-value caml_microbit_serial_read_char() {
-  return Val_int(microbit_serial_read_char());
+value caml_microbit_serial_read() {
+  return Val_int(microbit_serial_read());
 }
 
 /******************************************************************************/

@@ -31,8 +31,8 @@ int microbit_button_is_pressed(int b);
 
 /******************************************************************************/
 
-void microbit_serial_write_char(char c);
-char microbit_serial_read_char();
+void microbit_serial_write(char c);
+char microbit_serial_read();
 
 /******************************************************************************/
 
