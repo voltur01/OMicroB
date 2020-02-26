@@ -7,16 +7,16 @@
 
 void init_timer(void) {
   TIMER1_STOP = 1;
-  TIMER1_MODE = TIMER_Timer_Mode;
+  TIMER1_MODE = TIMER_Mode_Timer;
   TIMER1_BITMODE = TIMER_16Bit;
   TIMER1_PRESCALER = 4;      // 1MHz = 16MHz / 2^4
   TIMER1_CLEAR = 1;
   TIMER1_CC[0] = 1000 * TICK;
   TIMER1_SHORTS = BIT(TIMER_COMPARE0_CLEAR);
-  TIMER1_INTENSET = BIT(TIMER_INTEN_COMPARE0);
+  TIMER1_INTENSET = BIT(TIMER_INT_COMPARE0);
   TIMER1_START = 1;
 
-  set_priority(TIMER1_IRQ, 3);
+  irq_priority(TIMER1_IRQ, 3);
   enable_irq(TIMER1_IRQ);
 }
 
@@ -182,6 +182,14 @@ int microbit_button_is_pressed(int b) {
 }
 
 /******************************************************************************/
+
+static int pins[6] =
+  { PIN0,
+    PIN1,
+    PIN2,
+    PIN8,
+    PIN12,
+    PIN16 };
 
 void microbit_pin_mode(int p, int m) {
   GPIO_PINCNF[pins[p]] = m;

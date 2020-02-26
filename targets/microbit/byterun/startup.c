@@ -1,20 +1,37 @@
-// startup.c
-// Copyright (c) 2018 J. M. Spivey
+/*
+ * startup.c
+ *
+ * This file is part of the Phos operating system for microcontrollers
+ * Copyright (c) 2018 J. M. Spivey
+ * All rights reserved
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 
 #include "hardware.h"
 
-void null(void) { }
-
-/* phos_init -- hook to set up scheduler data structures */
-void phos_init(void);
-#pragma weak phos_init = _Z4nullv
-
 /* init -- main program, creates application processes */
 int main(int argc, const char **argv);
-
-/* phos_start -- hook to start process execution */
-void phos_start(void);
-#pragma weak phos_start = _Z4nullv
 
 /* Addresses set by the linker */
 extern unsigned __data_start[], __data_end[],
@@ -33,14 +50,8 @@ void __reset(void) {
      p = __bss_start;
      while (p < __bss_end) *p++ = 0;
 
-     /* Initialise the scheduler */
-     phos_init();
-
      /* Let the program initialise itself */
      main(0, nullptr);
-
-     /* Start the scheduler */
-     phos_start();
 
      /* If there is no scheduler, spin */
      while (1) pause();
@@ -53,8 +64,8 @@ void __reset(void) {
    implemented, so setting the priority to 0xff has the same effect as
    setting it to 0xc0.  Smaller numbers correspond to more urgency. */
 
-/* set_priority -- set priority for an IRQ to a value [0..0xff] */
-void set_priority(int irq, unsigned prio) {
+/* irq_priority -- set priority for an IRQ to a value [0..0xff] */
+void irq_priority(int irq, unsigned prio) {
      if (irq < 0)
           SET_BYTE(SCB_SHPR[(irq+8) >> 2], irq & 0x3, prio);
      else
