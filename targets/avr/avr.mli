@@ -37,6 +37,8 @@ module type AvrPins = sig
   val set_bit : 'a register -> 'a -> unit
   val clear_bit : 'a register -> 'a -> unit
   val read_bit : 'a register -> 'a -> bool
+  val pin_change_callback:
+    ('a register, 'b register, 'c register, 'd analog_pin) pin -> (unit -> unit) -> unit
 end
 
 val delay : int -> unit
@@ -57,3 +59,4 @@ end
 
 module Timer0: Timer
 module Timer2: Timer
+

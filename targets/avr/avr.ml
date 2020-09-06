@@ -37,6 +37,8 @@ module type AvrPins = sig
   val set_bit : 'a register -> 'a -> unit
   val clear_bit : 'a register -> 'a -> unit
   val read_bit : 'a register -> 'a -> bool
+  val pin_change_callback:
+    ('a register, 'b register, 'c register, 'd analog_pin) pin -> (unit -> unit) -> unit
 end
 
 external delay : int -> unit = "caml_delay" [@@noalloc]
@@ -74,3 +76,5 @@ module Timer2 = struct
   let set_period p = timer_set_period 2 p
   let set_callback c = timer_set_callback 2 c
 end
+
+(*****************************************************************************)
