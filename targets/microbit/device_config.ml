@@ -3,7 +3,8 @@
 let default_arm_cxx_options = [ "-mcpu=cortex-m0"; "-mthumb";
                                 "-fno-exceptions"; "-fno-unwind-tables";
                                 "-fdata-sections"; "-ffunction-sections";
-                                "-O"; "-g"; "-Wall" ]
+                                "-O"; "-g"; "-Wall"; "-Wl,-Os";
+                                "-Wl,--gc-sections" ]
 
 module MicroBitConfig : DEVICECONFIG = struct
   let compile_ml_to_byte ~ppx_options ~mlopts ~cxxopts ~local ~trace ~verbose
@@ -44,7 +45,7 @@ module MicroBitConfig : DEVICECONFIG = struct
     let cmd = cmd @ [ conc_microbit "startup.o";
                       arm_o_file;
                       conc_microbit "microbitlib.o" ] in
-    let cmd = cmd @ [ "-lnosys"; "-lstdc++"; "-lsupc++"; "-lm"; "-lc"; "-lgcc"; "-lstdc++"; "-lsupc++"; "-lm"; "-lc"; "-lgcc" ] in
+    (* let cmd = cmd @ [ "-lnosys"; "-lstdc++"; "-lsupc++"; "-lm"; "-lc"; "-lgcc"; "-lstdc++"; "-lsupc++"; "-lm"; "-lc"; "-lgcc" ] in *)
     let cmd = cmd @ [ "-o" ; arm_elf_file ] in
     run ~verbose cmd;
 
