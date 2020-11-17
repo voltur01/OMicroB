@@ -66,7 +66,16 @@ void microbit_serial_write(char c) {
   printf("%c", c);
 }
 
+void microbit_serial_write_string(const char* s) {
+  printf("%s", s);
+}
+
+
 char microbit_serial_read() {
+  return 0;
+}
+
+int microbit_serial_read_string(char* buf, int buf_size) {
   return 0;
 }
 

@@ -1,3 +1,4 @@
+#include <stdarg.h> 
 #include "arch-specific.h"
 #include "microbitlib.h"
 
@@ -18,6 +19,7 @@ void device_finish() {
 /******************************************************************************/
 
 void debug_blink_error(void) {
+  microbit_serial_write_string("DEBUG: debug_blink_error\n");
   while(1) {
     char s[] = "E";
     microbit_print_string(s);
@@ -26,6 +28,7 @@ void debug_blink_error(void) {
 }
 
 void debug_blink_uncatched_exception(void) {
+  microbit_serial_write_string("DEBUG: debug_blink_uncatched_exception\n");
   while(1) {
     char s[] = "U";
     microbit_print_string(s);
@@ -35,12 +38,16 @@ void debug_blink_uncatched_exception(void) {
 
 void debug_blink_message(int n) {
   char buf[50];
-  sprintf(buf, "%d", n);
+  snprintf(buf, 50, "%d", n);
   microbit_print_string(buf);
+  microbit_serial_write_string("DEBUG: debug_blink_message: ");
+  microbit_serial_write_string(buf);
+  microbit_serial_write_string("\n");
 }
 
 void debug_blink_pause(void) {
   char s[] = "P";
+  microbit_serial_write_string("DEBUG: debug_blink_pause\n");
   microbit_print_string(s);
   delay(1000);
 }
@@ -57,28 +64,42 @@ void uncaught_exception(value acc) {
 
 /******************************************************************************/
 
-#define TRACE_INSTRUCTION(instr_name)
+#if DEBUG > 0
+  #define TRACE_INSTRUCTION(instr_name) microbit_printf("pc: %04x, stack: %x, heap: %x - ", pc, sp, heap_ptr); \
+      microbit_serial_write_string(instr_name); microbit_serial_write_string("\n")
+#else
+  #define TRACE_INSTRUCTION(instr_name)
+#endif
+
+void microbit_printf(const char* format, ...) {
+  va_list vargs;
+  va_start(vargs, format);
+  char buf[256];
+  vsnprintf(buf, 256, format, vargs);
+  va_end(vargs);
+  microbit_serial_write_string(buf);
+}
 
 void print_value(value v) {
-  printf("0x%08" PRIflag "lx / ", v);
+  microbit_printf("0x%08" PRIflag "lx / ", v);
   if (OCAML_VIRTUAL_ARCH != 16 && Maybe_code_pointer(v)) {
-    printf("@%" PRIflag "ld (code pointer)", Codeptr_val(v));
+    microbit_printf("@%" PRIflag "ld (code pointer)", Codeptr_val(v));
   } else if (Is_int(v)) {
-    printf("(int = %" PRIflag "ld / float = %" PRIflag "f)", Int_val(v), (double)Float_val(v));
+    microbit_printf("(int = %" PRIflag "ld / float = %" PRIflag "f)", Int_val(v), (double)Float_val(v));
   } else if (Is_block_in_dynamic_heap(v)) {
-    printf("@%p (block in dynamic heap)", Ram_block_val(v));
+    microbit_printf("@%p (block in dynamic heap)", Ram_block_val(v));
   } else if (Is_block_in_static_heap(v)) {
-    printf("@%p (block in static heap)", Ram_block_val(v));
+    microbit_printf("@%p (block in static heap)", Ram_block_val(v));
   } else if (Is_block_in_flash_heap(v)) {
-    printf("@%p (block in flash heap)", Flash_block_val(v));
+    microbit_printf("@%p (block in flash heap)", Flash_block_val(v));
   } else if (v == 0) {
-    printf("NULL");
+    microbit_printf("NULL");
   } else if (Float_val(v) >= -1e6 && Float_val(v) <= 1e6) {
-    printf("(maybe %f)", (double)Float_val(v));
+    microbit_printf("(maybe %f)", (double)Float_val(v));
   } else {
-    printf("(?)");
+    microbit_printf("(?)");
   }
-  printf("\n");
+  microbit_printf("\n");
   fflush(stdout);
 }
 
@@ -86,18 +107,18 @@ static void print_table(const char *name, const value *table, uint32_t table_wos
   const value *ptr;
   int i;
 
-  printf("%s (starts at %p, ends at %p, size = %" PRIu32 " words) : \n", name, table, table + table_wosize, table_wosize);
+  microbit_printf("%s (starts at %p, ends at %p, size = %" PRIu32 " words) : \n", name, table, table + table_wosize, table_wosize);
 
   for (ptr = table, i = 0; ptr < table + table_wosize; ptr ++, i ++) {
 #ifdef OCAML_GC_STOP_AND_COPY
     if (ptr == ocaml_ram_heap + OCAML_STATIC_HEAP_WOSIZE + OCAML_DYNAMIC_HEAP_WOSIZE / 2) {
-      printf("======================================================\n");
+      microbit_printf("======================================================\n");
     }
 #endif
-    printf("%d  @%p : ", i, ptr);
+    microbit_printf("%d  @%p : ", i, ptr);
     print_value(*ptr);
   }
-  printf("\n\n\n");
+  microbit_printf("\n\n\n");
 }
 void print_dynamic_heap(void) {
   print_table("DYNAMIC HEAP", ocaml_ram_heap + OCAML_STATIC_HEAP_WOSIZE, OCAML_DYNAMIC_HEAP_WOSIZE);

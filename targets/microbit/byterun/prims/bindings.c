@@ -6,6 +6,10 @@
 
 #include "prims.h"
 
+#ifdef __OCAML__
+  #include "caml/alloc.h"
+#endif
+
 value caml_microbit_print_string(value s) {
   #ifdef __OCAML__
   microbit_print_string(String_val(s));
@@ -76,8 +80,37 @@ value caml_microbit_serial_write(value c) {
   return Val_unit;
 }
 
+value caml_microbit_serial_write_string(value s) {
+  #ifdef __OCAML__
+    microbit_serial_write_string(String_val(s));
+  #else
+  int n = string_length(s); int i;
+  char buf[n+1];
+  for(i = 0; i < n; i++) buf[i] = String_field(s, i);
+  buf[n] = '\0';
+    microbit_serial_write_string(buf);
+  #endif
+  return Val_unit;
+}
+
 value caml_microbit_serial_read() {
   return Val_int(microbit_serial_read());
+}
+
+value caml_microbit_serial_read_string() {
+  const int buf_size = 128;
+  char buf[buf_size];
+  int chars_read = microbit_serial_read_string(buf, buf_size);
+
+  // TODO: too long strings are silently truncated - better than an exception?
+  // ideally need to allocate a new buffer and keep reading + concatenating
+
+  #ifdef __OCAML__
+    return caml_alloc_initialized_string((chars_read > 0) ? chars_read : buf_size, buf);
+  #else
+    (void) chars_read;
+    return copy_bytes(buf);
+  #endif
 }
 
 /******************************************************************************/
@@ -135,7 +168,7 @@ value caml_microbit_radio_send(value s) {
 
 value caml_microbit_radio_recv() {
 #ifdef __OCAML__
-  return alloc_string(0);
+  return caml_alloc_string(0);
 #else
   const char *buf = microbit_radio_recv();
   return copy_bytes(buf);

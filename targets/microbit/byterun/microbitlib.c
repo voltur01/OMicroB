@@ -226,11 +226,36 @@ void microbit_serial_write(char ch) {
   UART_TXD = ch;
 }
 
+void microbit_serial_write_string(const char* str) {
+  for (const char* pchar = str; *pchar; pchar++) {
+    microbit_serial_write(*pchar);
+  }
+}
+
 char microbit_serial_read() {
   while (! UART_RXDRDY) { }
   char ch = UART_RXD;
   UART_RXDRDY = 0;
   return ch;
+}
+
+int microbit_serial_read_string(char* buf, int buf_size) {
+  char* pchar = buf;
+  char* pend = buf + buf_size;
+
+  while(pchar < pend) {
+    char ch = microbit_serial_read();
+
+    if (ch == '\r' || ch == '\n') {
+      *pchar = '\0';
+      return pchar - buf;
+    } else {
+      *pchar++ = ch;
+      microbit_serial_write(ch);  // echo it back
+    }
+  }
+  *pend = '\0';
+  return 0;
 }
 
 /******************************************************************************/

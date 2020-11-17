@@ -2,7 +2,7 @@ include ../../etc/Makefile.conf
 
 LIBMICROBIT := $(LIB)/targets/microbit
 
-MODULES := microbit
+MODULES := microbit microbit_prims
 
 MLS := $(MODULES:=.ml)
 MLIS := $(MODULES:=.mli)
@@ -22,13 +22,22 @@ TARGETS := $(LIBMICROBIT) $(LIB_MLS) $(LIB_MLIS) $(LIB_CMIS) $(LIB_CMOS) $(LIBMI
 
 microbit: $(TARGETS)
 
-$(LIBMICROBIT)/microbit.cma: microbit.cmo
+$(LIBMICROBIT)/microbit.cma: microbit.cmo microbit_prims.cmo 
 	$(OCAMLC) -a $^ -o $@
 
 microbit.cmi: microbit.mli
 	CAMLLIB=$(LIB) $(OCAMLC) -c -w @a $< -o $@
 
 microbit.cmo: microbit.ml microbit.cmi
+	CAMLLIB=$(LIB) $(OCAMLC) -c -w @a $< -o $@
+
+microbit_prims.mli: microbit_prims.ml
+	CAMLLIB=$(LIB) $(OCAMLC) -i $< > $@
+
+microbit_prims.cmi: microbit_prims.mli
+	CAMLLIB=$(LIB) $(OCAMLC) -c -w @a $< -o $@
+
+microbit_prims.cmo: microbit_prims.ml microbit_prims.cmi
 	CAMLLIB=$(LIB) $(OCAMLC) -c -w @a $< -o $@
 
 $(LIBMICROBIT):

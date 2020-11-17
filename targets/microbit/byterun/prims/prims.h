@@ -32,7 +32,9 @@ int microbit_button_is_pressed(int b);
 /******************************************************************************/
 
 void microbit_serial_write(char c);
+void microbit_serial_write_string(const char* s);
 char microbit_serial_read();
+int microbit_serial_read_string(char*, int);
 
 /******************************************************************************/
 
